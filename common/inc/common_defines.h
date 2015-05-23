@@ -1,0 +1,34 @@
+#ifndef COMMON_DEFINES
+#define COMMON_DEFINES
+
+/* Common constants - for Opencl and C++ side  */
+#define DEFAULT_STRIDE 256 
+#define MAX_DEPTH_VALUE 32767
+#define MAX_NORMAL_VALUE 10000
+#define MAX_INTENSITY_DIVISOR 100
+#define MAX_VERTEX_VALUE 19  /* actually - 18.4... in meters, I guess */
+#define MAX_TSDF_WEIGHT (1<<7)  /* 128 */
+#define NUMERIC_LIMITS_FLOAT_EPSILON 1.192092896e-07f
+#define FLOAT_MIN 1.175494351e-38f
+#define PI 3.14159265358979323846
+#define DEG2RADIAN(DEG) ((DEG)*((PI)/(180.0)))
+#define DEFAULT_NUM_OF_ICP_PYRAMID_LEVELS 3
+#define MAX_GROUP_SIZE 3
+#define DEFAULT_NUM_OF_RGBD_PYRAMID_LEVELS 3
+#define DEFAULT_DEPTH_THRESHOLD_RGBD 0.07f  /* source - odometry.cpp from opencv_contrib */
+#define TRANSFORM_DIM_RGB 6
+#define DEFAULT_SCALE_FACTOR ( 1.f / 1000.f )
+#define DEFAULT_SIGMA_COLOR 30.f
+#define SIGMA_COLOR_INV_HALF 0.5f / ( DEFAULT_SIGMA_COLOR * DEFAULT_SIGMA_COLOR )
+#define DEFAULT_SIGMA_SPACE 4.5f
+#define SIGMA_SPACE_INV_HALF 0.5f / ( DEFAULT_SIGMA_SPACE * DEFAULT_SIGMA_SPACE )
+#define DEFAULT_MAX_DISTANCE 300  /* in mm */
+#define DEFAULT_TRUNCATION_DISTANCE 0.03f /* in meters, yeah as above */
+#define DEFAULT_MAX_WEIGHT 1    /*for color_volume */
+#define DEFAULT_DISTANCE_THRESHOLD 0.1f /* in meters */
+#define DEFAULT_CAMERA_MOVEMENT_THRESHOLD 0.001f
+#define DEFAULT_VOLUME_SHIFTING_THRESHOLD 1.5f
+
+#define DIVUP(TOTAL,DIVISOR) ( ( (TOTAL) + (DIVISOR) - 1 ) / DIVISOR )
+
+#endif

@@ -1,0 +1,134 @@
+# for obtain root path of project
+TOP := $(dir $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST)))
+COMMON_INC		=	$(TOP)/common/inc
+COMMON_IMPL		=	$(TOP)/common/inc/impl
+COMMON_OPENCL_IMPL	=	$(TOP)/common/inc/opencl
+COMMON_INC_TYPE	=	$(TOP)/common/inc/types
+
+#FIXME
+MY_HOME	=	/home/dima
+
+# for fusion & DVO submodule only
+BOOST_INC		=	/usr/include
+PCL_INC			=	-I$(MY_HOME)/pcl-trunk/common/include \
+					-I$(MY_HOME)/pcl-trunk/build/include \
+					-I$(MY_HOME)/pcl-trunk/io/include \
+					-I$(MY_HOME)/pcl-trunk/common/include \
+					-I$(MY_HOME)/pcl-trunk/filters/include \
+					-I$(MY_HOME)/pcl-trunk/visualization/include \
+					-I$(MY_HOME)/pcl-trunk/geometry/include \
+					-I$(MY_HOME)/pcl-trunk/search/include \
+					-I$(MY_HOME)/pcl-trunk/kdtree/include
+
+EIGEN_INC		=	/usr/include/eigen3
+
+VTK_INC			=	/usr/include/vtk-5.8/
+
+#for dvo
+DVO_INC			=	$(TOP)/dvo/include
+OPENCV_INC		=	$(MY_HOME)/3rdparty/opencv/include
+OPENCV_CONTRIB_INC	=	$(MY_HOME)/3rdparty/opencv_contrib/modules/rgbd/include
+SOPHUS_INC		=	$(MY_HOME)/3rdparty/Sophus
+SOPHUS_LD_FLAGS	=	-L$(MY_HOME)/3rdparty/Sophus/build -lSophus 
+
+SOPHUS_TMP		=	$(MY_HOME)/Sophus-master
+FIXME_INC_DVO	=	-I/usr/include/suitesparse/ -std=c++11 $(PCL_INC)
+
+FOVIS_INC		=	$(MY_HOME)/3rdparty/libfovis/libfovis
+FOVIS_LIB_INC	=	$(MY_HOME)/3rdparty/libfovis/build/lib
+FOVIS_LD_FLAGS	=	-L$(FOVIS_LIB_INC) -lfovis
+
+BOOST_LIB_INC	=	/usr/lib/x86_64-linux-gnu
+BOOST_LD_FLAGS	=	-L$(BOOST_LIB_INC) -lboost_filesystem -lboost_system -lboost_thread
+
+OPENNI_LIB_INC	=	$(MY_HOME)/OpenNI/lib
+OPENNI_LD_FLAGS	=	-L$(PCL_LIBS_INC) -lOpenNI
+
+PCL_LIBS_INC	=	$(MY_HOME)/pcl-trunk/build/lib
+PCL_LD_FLAGS	=	-L$(PCL_LIBS_INC) -lpcl_io -lpcl_common
+
+BIN_DIR			=	$(TOP)/bin
+LIB_DIR			=	$(TOP)/lib 
+
+OUT_TST_DIR		=	$(BIN_DIR)/tests
+
+G2O_INC			=	$(MY_HOME)/3rdparty/g2o
+G2O_BUILD_INC	=	$(MY_HOME)/3rdparty/g2o/build
+G2O_LIBS_INC	=	$(G2O_INC)/lib
+G2O_LD_FLAGS	=	-L$(G2O_LIBS_INC)	-lg2o_core -lg2o_solver_slam2d_linear -lg2o_solver_cholmod -lg2o_types_slam3d #-lg2o_solver_csparse
+
+
+#	it is common for every sub-projects
+CC			=	g++
+# yeap, indeed, we use path related to location of every sub-Makefile
+SRC_DIR			=       ./src
+OBJ_DIR			=       ./obj
+INC_DIR			=       ./inc
+IMPL_DIR       	=       $(INC_DIR)/impl
+
+# FIXME - system dependent
+#OPENCL_INCLUDE_DIR	=	/opt/AMDAPP/include/ #/usr/local/cuda-5.5/include/
+OPENNI_INCLUDE_DIR	=	/usr/include/ni
+
+OPENCV_HOME	=	$(MY_HOME)/3rdparty/opencv/
+
+OPENCV_LIB_HOME = $(MY_HOME)/3rdparty/build-opencv/lib
+OPENCV_LD_FLAGS	=	-L$(OPENCV_LIB_HOME) -lopencv_core
+
+FIXME_INC	=	-I$(OPENCV_HOME)/modules/core/include -I$(OPENCV_HOME)/modules/flann/include -I$(OPENCV_HOME)/modules/imgproc/include -I$(OPENCV_HOME)/modules/photo/include -I$(OPENCV_HOME)/modules/video/include -I$(OPENCV_HOME)/modules/features2d/include -I$(OPENCV_HOME)/modules/objdetect/include -I$(OPENCV_HOME)/modules/calib3d/include -I$(OPENCV_HOME)/modules/ml/include -I$(OPENCV_HOME)/modules/highgui/include  -I$(OPENCV_HOME)/modules/contrib/include -I$(OPENCV_HOME)/include  -I$(OPENCV_HOME)/modules/imgcodecs/include -I$(OPENCV_HOME)/modules/videoio/include -I$(SOPHUS_INC)
+
+DEBUG_FLAG		=	-g3 -fno-inline -O0
+
+#FIXME - system dependent
+MATH_FLAG		=	-march=native -msse3 -mfpmath=sse
+#FIXME: -Wnarrowing -Wno-deprecated
+#CFLAGS			=	$(MATH_FLAG) $(DEBUG_FLAG) -I$(INC_DIR) -I$(IMPL_DIR) -I$(COMMON_INC_TYPE)	-I$(COMMON_OPENCL_IMPL)	-I$(OPENNI_INCLUDE_DIR) -I$(FOVIS_INC) -fPIC -std=c++11 -Wnarrowing -Wno-deprecated #-I$(OPENCL_INCLUDE_DIR) 
+CFLAGS			=	$(MATH_FLAG) $(DEBUG_FLAG) -I$(INC_DIR) -I$(IMPL_DIR) -I$(COMMON_INC_TYPE) -fPIC -std=c++11 -Wnarrowing -Wno-deprecated
+
+SRC     		=   $(wildcard $(SRC_DIR)/*.cpp)
+OBJ     		=   $(addprefix $(OBJ_DIR)/,$(notdir $(SRC:.cpp=.o)))
+
+VPATH			=	$(SRC_DIR)
+
+
+#	common library with internals
+NAME			=	common
+MAJOR			=	1
+MINOR			=	0
+VERSION			=	$(MAJOR).$(MINOR)
+LIB_NAME		=	lib$(NAME).so.$(VERSION)
+
+#	dvo library
+NAME_DVO		=	dvo
+MAJOR_DVO		=	1
+MIOR			=	0
+VERSION_DVO		=	$(MAJOR).$(MINOR)
+LIB_NAME_DVO	=	lib$(NAME_DVO).so.$(VERSION_DVO)
+
+#	default behaviour 
+#debug:			CFLAGS	+= -DDEBUG
+#debug: 			clean all
+
+#	name of main app
+FUSION			= fusion
+
+#		name of test binaries
+TST_OPENCL_KERNEL	=	test_build_opencl_kernel
+TST_CUDA_KERNEL		=	test_build_cuda_kernel
+TST_COMMON_ALGO		=	test_matrix
+TST					=	tst_sepia
+
+#		OS-specific compilation flags
+ifeq ($(OS),Windows_NT)
+	CFLAGS		+=	-DWINDOWS
+else
+        UNAME_S = $(shell uname -s)
+        ifeq ($(UNAME_S),Darwin)
+                CFLAGS += -DMACOS
+                LDFLAGS += -framework OpenCL
+        endif
+        ifeq ($(UNAME_S),Linux)
+        	CFLAGS += -DLINUX
+			LDFLAGS +=      -L/usr/lib     -lOpenCL	-L$(OPENNI_LIB_INC) $(OPENNI_LD_FLAGS)
+		endif
+endif
